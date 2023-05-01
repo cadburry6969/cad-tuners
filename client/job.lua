@@ -12,7 +12,7 @@ local function DeleteVehicle(k)
                 local ped = PlayerPedId()
                 QBCore.Functions.DeleteVehicle(GetVehiclePedIsIn(ped))
                 DeleteEntity(GetVehiclePedIsIn(ped))
-                inVehicle = false                
+                inVehicle = false
                 exports[core_export]:HideText()
             end
             Wait(1)
@@ -43,19 +43,19 @@ local function OpenTunerStash(isShared)
         TriggerEvent("inventory:client:SetCurrentStash", "tuners_shared")
     else
         local pData = QBCore.Functions.GetPlayerData()
-        TriggerServerEvent("inventory:server:OpenInventory", "stash", "tuners_"..pData.citizenid, {
+        TriggerServerEvent("inventory:server:OpenInventory", "stash", "tuners_" .. pData.citizenid, {
             maxweight = 500000,
             slots = 100,
         })
-        TriggerEvent("inventory:client:SetCurrentStash", "tuners_"..pData.citizenid)
+        TriggerEvent("inventory:client:SetCurrentStash", "tuners_" .. pData.citizenid)
     end
 end
 
 local function LoadExports()
     local TunerBlip = AddBlipForCoord(139.79, -3031.15, 7.04)
-    SetBlipSprite (TunerBlip, 488)
+    SetBlipSprite(TunerBlip, 488)
     SetBlipDisplay(TunerBlip, 4)
-    SetBlipScale  (TunerBlip, 0.9)
+    SetBlipScale(TunerBlip, 0.9)
     SetBlipAsShortRange(TunerBlip, true)
     SetBlipColour(TunerBlip, 13)
     BeginTextCommandSetBlipName("STRING")
@@ -63,28 +63,28 @@ local function LoadExports()
     EndTextCommandSetBlipName(TunerBlip)
 
     exports[target_export]:AddCircleZone("tunercatelogue", vector3(132.96, -3014.89, 7.04), 0.8, {
-        name="tunercatelogue",
-        useZ=true,
-        debugPoly=false
-    },{
+        name = "tunercatelogue",
+        useZ = true,
+        debugPoly = false
+    }, {
         options = {
-            { 
+            {
                 icon = "fas fa-gear",
                 label = "Catalogue",
                 action = function()
                     OpenTunerCatelogue()
                 end
-            },                
-        }, 
+            },
+        },
         distance = 2.0
     })
     exports[target_export]:AddBoxZone("tunerbossmenu", vector3(125.58, -3007.23, 7.04), 0.6, 1, {
-        name="tunerbossmenu",
-        heading=352,
+        name = "tunerbossmenu",
+        heading = 352,
         --debugPoly=true,
-        minZ=6.84,
-        maxZ=7.44
-    },{
+        minZ = 6.84,
+        maxZ = 7.44
+    }, {
         options = {
             {
                 type = "client",
@@ -95,14 +95,14 @@ local function LoadExports()
             },
         },
         distance = 2.0
-    })    
+    })
     exports[target_export]:AddBoxZone("tunersharedstash", vector3(128.67, -3014.47, 7.04), 1.6, 3, {
-        name="tunersharedstash",
-        heading=1,
+        name = "tunersharedstash",
+        heading = 1,
         --debugPoly=true,
-        minZ=6.04,
-        maxZ=8.84
-    },{
+        minZ = 6.04,
+        maxZ = 8.84
+    }, {
         options = {
             {
                 icon = 'fas fa-box',
@@ -114,23 +114,23 @@ local function LoadExports()
             }
         },
         distance = 2.0,
-    })    
+    })
     exports[target_export]:AddBoxZone("tunerstashoutfit", vector3(154.24, -3011.35, 7.04), 0.4, 2, {
-        name="tunerstashoutfit",
-        heading=270,
+        name = "tunerstashoutfit",
+        heading = 270,
         --debugPoly=true,
-        minZ=6.04,
-        maxZ=8.24,
-    },{
+        minZ = 6.04,
+        maxZ = 8.24,
+    }, {
         options = {
-            {				
+            {
                 type = "client",
                 event = "qb-clothing:client:openOutfitMenu",
                 icon = 'fas fa-tshirt',
                 label = 'Outfits',
                 job = tuner_job_name
             },
-            {                
+            {
                 icon = 'fas fa-box',
                 label = 'Stash',
                 action = function()
@@ -142,14 +142,14 @@ local function LoadExports()
         distance = 2.0,
     })
     exports[target_export]:AddBoxZone("tunervehiclemenu", vector3(133.04, -3026.48, 7.04), 0.8, 1, {
-        name="tunervehiclemenu",
-        heading=0,
+        name = "tunervehiclemenu",
+        heading = 0,
         --debugPoly=true,
-        minZ=6.04,
-        maxZ=7.84
-    },{
+        minZ = 6.04,
+        maxZ = 7.84
+    }, {
         options = {
-            {				
+            {
                 type = "client",
                 event = "cad-tuners:openmenu",
                 icon = 'fas fa-gear',
@@ -160,11 +160,11 @@ local function LoadExports()
         distance = 1.5,
     })
     local boxZone = BoxZone:Create(vector3(125.78, -3023.05, 7.04), 4, 4, {
-        name="tunerdeletevehicle",
-        heading=0,
+        name = "tunerdeletevehicle",
+        heading = 0,
         --debugPoly=true,
-        minZ=6.04,
-        maxZ=8.84
+        minZ = 6.04,
+        maxZ = 8.84
     })
     boxZone:onPlayerInOut(function(isPointInside)
         if isPointInside and IsPedInAnyVehicle(PlayerPedId()) and IsTunerJob() then
@@ -195,24 +195,24 @@ RegisterNetEvent("cad-tuners:openmenu", function()
             isMenuHeader = true,
             header = "♾ Tuners Menu",
         },
-        {                
+        {
             header = "🚘 Spawn Vehicles",
             txt = 'Shows list of tuner vehicles',
             params = {
                 event = 'cad-tuners:spawnmenu',
             }
         },
-        {                
+        {
             header = "🚘 Give Vehicles",
             txt = 'Shows list of tuner vehicles',
-            params = {                
+            params = {
                 event = 'cad-tuners:givevehicle',
             }
         },
-        {                
+        {
             header = "🚘 Delete Vehicle",
             txt = 'Delete vehicle in display area',
-            params = {                
+            params = {
                 event = 'cad-tuners:deletevehicle',
             }
         },
@@ -225,7 +225,7 @@ RegisterNetEvent("cad-tuners:deletevehicle", function()
     if DoesEntityExist(cveh) then
         QBCore.Functions.DeleteVehicle(cveh)
         DeleteEntity(cveh)
-        TriggerEvent("QBCore:Notify", "vehicle has been removed", "error")        
+        TriggerEvent("QBCore:Notify", "vehicle has been removed", "error")
     else
         TriggerEvent("QBCore:Notify", "No vehicle to remove", "error")
     end
@@ -237,7 +237,7 @@ RegisterNetEvent("cad-tuners:givevehicle", function()
             isMenuHeader = true,
             header = "🚘 Give Vehicle",
         },
-        {                
+        {
             header = "⬅️ Go Back",
             txt = 'Return back to main menu',
             params = {
@@ -247,7 +247,7 @@ RegisterNetEvent("cad-tuners:givevehicle", function()
     }
     for k, v in pairs(QBCore.Shared.Vehicles) do
         if v.category == category_vehice then
-            vehicleMenu[#vehicleMenu + 1] = {                
+            vehicleMenu[#vehicleMenu + 1] = {
                 header = v.name,
                 txt = v.brand,
                 params = {
@@ -257,7 +257,7 @@ RegisterNetEvent("cad-tuners:givevehicle", function()
                         coords = vector4(125.84, -3022.86, 6.43, 270.02),
                     }
                 }
-            } 
+            }
         end
     end
     exports[menu_export]:openMenu(vehicleMenu)
@@ -282,20 +282,20 @@ RegisterNetEvent("cad-tuners:giveconfirm", function(data)
     end
 end)
 
-RegisterNetEvent('cad-tuners:TakeOutBuy', function(model, plate, coords)    
+RegisterNetEvent('cad-tuners:TakeOutBuy', function(model, plate, coords)
     local p = promise.new()
 
     QBCore.Functions.TriggerCallback('cad-tuners:spawnVehicle', function(netId)
         p:resolve(netId)
     end, model, coords, false)
-    
+
     local result = Citizen.Await(p)
     local veh = NetToVeh(result)
-    
+
     SetVehicleNumberPlateText(veh, plate)
     exports[fuel_export]:SetFuel(veh, 100)
     TriggerEvent("vehiclekeys:client:SetOwner", plate)
-    SetEntityAsMissionEntity(veh, true, true)    
+    SetEntityAsMissionEntity(veh, true, true)
     SetVehicleEngineOn(veh, true, true)
     TriggerServerEvent("qb-vehicletuning:server:SaveVehicleProps", QBCore.Functions.GetVehicleProperties(veh))
 end)
@@ -306,7 +306,7 @@ RegisterNetEvent("cad-tuners:spawnmenu", function()
             isMenuHeader = true,
             header = "🚘 Spawn Vehicle",
         },
-        {                
+        {
             header = "⬅️ Go Back",
             txt = 'Return back to main menu',
             params = {
@@ -316,10 +316,10 @@ RegisterNetEvent("cad-tuners:spawnmenu", function()
     }
     for k, v in pairs(QBCore.Shared.Vehicles) do
         if v.category == category_vehice then
-            vehicleMenu[#vehicleMenu + 1] = {                
+            vehicleMenu[#vehicleMenu + 1] = {
                 header = v.name,
                 txt = v.brand,
-                params = {                
+                params = {
                     event = 'cad-tuners:TakeOut',
                     args = {
                         vehmodel = v.model,
@@ -333,25 +333,25 @@ RegisterNetEvent("cad-tuners:spawnmenu", function()
 end)
 
 RegisterNetEvent('cad-tuners:TakeOut', function(data)
-    if not GetIsPointClear(data.coords) then            
+    if not GetIsPointClear(data.coords) then
         local cveh, cdist = QBCore.Functions.GetClosestVehicle(vector3(data.coords.x, data.coords.y, data.coords.z))
         if cdist < 5 then
             QBCore.Functions.DeleteVehicle(cveh)
             DeleteEntity(cveh)
-        end        
+        end
     end
     local p = promise.new()
 
     QBCore.Functions.TriggerCallback('cad-tuners:spawnVehicle', function(netId)
         p:resolve(netId)
     end, data.vehmodel, data.coords, false)
-    
+
     local result = Citizen.Await(p)
     local veh = NetToVeh(result)
 
     local plate = QBCore.Functions.GetPlate(veh)
     exports[fuel_export]:SetFuel(veh, 100)
     TriggerEvent("vehiclekeys:client:SetOwner", plate)
-    SetEntityAsMissionEntity(veh, true, true)    
+    SetEntityAsMissionEntity(veh, true, true)
     SetVehicleEngineOn(veh, false, false)
 end)

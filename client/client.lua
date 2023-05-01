@@ -2,22 +2,22 @@ local lastSelectedVehicleEntity
 local inTheShop = false
 local vehiclesTable = {}
 local provisoryObject = {}
-local rgbColorSelected = {255,255,255}
-local rgbSecondaryColorSelected = {255,255,255}
+local rgbColorSelected = { 255, 255, 255 }
+local rgbSecondaryColorSelected = { 255, 255, 255 }
 local QBCore = exports[core_export]:GetCoreObject()
 
-RegisterNetEvent('cad-tuners.notify', function(type, message)    
-    SendNUIMessage({type = "notify",typenotify = type,message = message,}) 
+RegisterNetEvent('cad-tuners.notify', function(type, message)
+    SendNUIMessage({ type = "notify", typenotify = type, message = message })
 end)
 
 RegisterNetEvent('cad-tuners.vehiclesInfos', function()
-    for k,v in pairs(QBCore.Shared.Vehicles) do 
+    for k, v in pairs(QBCore.Shared.Vehicles) do
         if v.shop == catelogue_shop then
-            vehiclesTable[v.category] = {}   
+            vehiclesTable[v.category] = {}
         end
-    end 
+    end
 
-    for k,v in pairs(QBCore.Shared.Vehicles) do
+    for k, v in pairs(QBCore.Shared.Vehicles) do
         if v.shop == catelogue_shop then
             provisoryObject = {
                 brand = v.brand,
@@ -33,10 +33,10 @@ end)
 
 function OpenTunerCatelogue()
     inTheShop = true
-    TriggerEvent("cad-tuners.notify", 'error', 'Use A and D To Rotate')    
+    TriggerEvent("cad-tuners.notify", 'error', 'Use A and D To Rotate')
     TriggerEvent('cad-tuners.vehiclesInfos')
     Wait(1000)
-    SendNUIMessage({data = vehiclesTable,type = "display"})
+    SendNUIMessage({ data = vehiclesTable, type = "display" })
     SetNuiFocus(true, true)
     RequestCollisionAtCoord(x, y, z)
     cam = CreateCamWithParams("DEFAULT_SCRIPTED_CAMERA", -953.39, -3538.13, 14.81, 326.39, 0.00, 0.00, 60.00, false, 0)
@@ -65,17 +65,17 @@ function updateSelectedVehicle(model)
     if lastSelectedVehicleEntity ~= nil then
         DeleteEntity(lastSelectedVehicleEntity)
     end
-  
+
     lastSelectedVehicleEntity = CreateVehicle(hash, -950.12, -3533.20, 14.00, 111.61, 0, 1)
 
 
     local vehicleData = {}
 
-    
+
     vehicleData.traction = GetVehicleMaxTraction(lastSelectedVehicleEntity)
 
 
-    vehicleData.breaking = GetVehicleMaxBraking(lastSelectedVehicleEntity) * 0.9650553    
+    vehicleData.breaking = GetVehicleMaxBraking(lastSelectedVehicleEntity) * 0.9650553
     if vehicleData.breaking >= 1.0 then
         vehicleData.breaking = 1.0
     end
@@ -86,15 +86,17 @@ function updateSelectedVehicle(model)
     end
 
     vehicleData.acceleration = GetVehicleAcceleration(lastSelectedVehicleEntity) * 2.6
-    if  vehicleData.acceleration >= 1.0 then
+    if vehicleData.acceleration >= 1.0 then
         vehicleData.acceleration = 1.0
     end
 
 
-    SendNUIMessage({data = vehicleData,type = "updateVehicleInfos"})
+    SendNUIMessage({ data = vehicleData, type = "updateVehicleInfos" })
 
-    SetVehicleCustomPrimaryColour(lastSelectedVehicleEntity,  rgbColorSelected[1], rgbColorSelected[2], rgbColorSelected[3])
-    SetVehicleCustomSecondaryColour(lastSelectedVehicleEntity,  rgbSecondaryColorSelected[1], rgbSecondaryColorSelected[2], rgbSecondaryColorSelected[3])
+    SetVehicleCustomPrimaryColour(lastSelectedVehicleEntity, rgbColorSelected[1], rgbColorSelected[2],
+        rgbColorSelected[3])
+    SetVehicleCustomSecondaryColour(lastSelectedVehicleEntity, rgbSecondaryColorSelected[1], rgbSecondaryColorSelected
+        [2], rgbSecondaryColorSelected[3])
     SetEntityHeading(lastSelectedVehicleEntity, 89.5)
 end
 
@@ -103,7 +105,7 @@ function rotation(dir)
     SetEntityHeading(lastSelectedVehicleEntity, entityRot % 360)
 end
 
-RegisterNUICallback("rotate",function(data, cb)
+RegisterNUICallback("rotate", function(data, cb)
     if (data["key"] == "left") then
         rotation(2)
     else
@@ -119,35 +121,37 @@ end)
 RegisterNUICallback("RGBVehicle", function(data, cb)
     if data.primary then
         rgbColorSelected = data.color
-        SetVehicleCustomPrimaryColour(lastSelectedVehicleEntity, math.ceil(data.color[1]), math.ceil(data.color[2]), math.ceil(data.color[3]) )
+        SetVehicleCustomPrimaryColour(lastSelectedVehicleEntity, math.ceil(data.color[1]), math.ceil(data.color[2]),
+            math.ceil(data.color[3]))
     else
         rgbSecondaryColorSelected = data.color
-        SetVehicleCustomSecondaryColour(lastSelectedVehicleEntity, math.ceil(data.color[1]), math.ceil(data.color[2]), math.ceil(data.color[3]))
+        SetVehicleCustomSecondaryColour(lastSelectedVehicleEntity, math.ceil(data.color[1]), math.ceil(data.color[2]),
+            math.ceil(data.color[3]))
     end
 end)
 
-RegisterNUICallback("menuSelected",function(data, cb)
+RegisterNUICallback("menuSelected", function(data, cb)
     local categoryVehicles
 
     local playerIdx = GetPlayerFromServerId(source)
     local ped = GetPlayerPed(playerIdx)
-    
+
     if data.menuId ~= 'all' then
         categoryVehicles = vehiclesTable[data.menuId]
     else
-        SendNUIMessage({data = vehiclesTable,type = "display"})
+        SendNUIMessage({ data = vehiclesTable, type = "display" })
         return
     end
 
-    SendNUIMessage({data = categoryVehicles,type = "menu"})
+    SendNUIMessage({ data = categoryVehicles, type = "menu" })
 end)
 
 RegisterNUICallback("Close", function(data, cb)
-    CloseNui()       
+    CloseNui()
 end)
 
 function CloseNui()
-    SendNUIMessage({type = "hide"})
+    SendNUIMessage({ type = "hide" })
     SetNuiFocus(false, false)
     if inTheShop then
         if lastSelectedVehicleEntity ~= nil then
@@ -155,7 +159,7 @@ function CloseNui()
         end
         RenderScriptCams(false)
         DestroyAllCams(true)
-        SetFocusEntity(GetPlayerPed(PlayerId())) 
+        SetFocusEntity(GetPlayerPed(PlayerId()))
         DisplayHud(true)
         DisplayRadar(true)
     end
@@ -164,7 +168,7 @@ function CloseNui()
     provisoryObject = {}
 end
 
-AddEventHandler("onResourceStop",function(resourceName)
+AddEventHandler("onResourceStop", function(resourceName)
     if resourceName == GetCurrentResourceName() then
         CloseNui()
     end

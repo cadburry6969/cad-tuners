@@ -1,6 +1,11 @@
-Tuner Catalogue and Vehicle Give/Test for QBCore
+# Tuner cars display and sell
 
-# Preview:
-![Catalogue](https://user-images.githubusercontent.com/72443203/212019376-f12d6b31-ed30-4579-a338-8f34ea4c9f6c.png)
+### qb-core/shared Configuration
+- Add `tuner` job
+- If want the vehicles to be shown in catelogue then add `['shop'] = 'tuner'`
+- If want the vehVicles to be sold/spawn then add `['category'] = 'tuners'`
 
-![Menu](https://user-images.githubusercontent.com/72443203/212019503-78b3e8ae-ddd4-488d-94b0-7e06a713eb82.png)
+
+This was made for a server but now the server is closed so here you go.
+
+Note: i am not going to give support for this resource

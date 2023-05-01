@@ -1,8 +1,9 @@
 local QBCore = exports[core_export]:GetCoreObject()
 
 function GeneratePlate()
-    local plate = QBCore.Shared.RandomInt(1) .. QBCore.Shared.RandomStr(2) .. QBCore.Shared.RandomInt(3) .. QBCore.Shared.RandomStr(2)
-    local result = MySQL.Sync.fetchScalar('SELECT plate FROM player_vehicles WHERE plate = ?', {plate})
+    local plate = QBCore.Shared.RandomInt(1) ..
+    QBCore.Shared.RandomStr(2) .. QBCore.Shared.RandomInt(3) .. QBCore.Shared.RandomStr(2)
+    local result = MySQL.Sync.fetchScalar('SELECT plate FROM player_vehicles WHERE plate = ?', { plate })
     if result then
         return GeneratePlate()
     else
@@ -11,8 +12,8 @@ function GeneratePlate()
 end
 
 function GenerateReceipt()
-    local receipt = QBCore.Shared.RandomInt(1) .. QBCore.Shared.RandomInt(2) .. QBCore.Shared.RandomInt(3)  
-    local result = MySQL.Sync.fetchScalar('SELECT receipt FROM player_vehicles WHERE receipt = ?', {receipt})
+    local receipt = QBCore.Shared.RandomInt(1) .. QBCore.Shared.RandomInt(2) .. QBCore.Shared.RandomInt(3)
+    local result = MySQL.Sync.fetchScalar('SELECT receipt FROM player_vehicles WHERE receipt = ?', { receipt })
     if result then
         return GenerateReceipt()
     else
@@ -33,9 +34,13 @@ RegisterNetEvent('cad-tuners:GiveVehicle', function(playerid, data, IsClear)
             local plate = GeneratePlate()
             local receipt = GenerateReceipt()
             local date = os.date("%x", 906000490)
-            MySQL.Async.insert('INSERT INTO player_vehicles (license, citizenid, vehicle, hash, mods, plate, garage, state, Balancepaid, balanceleft, vehiclePrice , receipt, ownername, phonenumber, soldby, solddate, commission) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', {pData.PlayerData.license, pData.PlayerData.citizenid, vehicle, GetHashKey(vehicle), '{}', plate, "tunerparking", 0, price, "0", price, receipt, pData.PlayerData.charinfo.firstname, pData.PlayerData.phone, "TUNERS", date, "1"})
-            TriggerClientEvent('QBCore:Notify', playerid, 'Congratulations on purchase of '..name..'!', 'success')
-            TriggerClientEvent('QBCore:Notify', src, 'You sold a vehicle to ['..playerid..']!', 'success')
+            MySQL.Async.insert(
+            'INSERT INTO player_vehicles (license, citizenid, vehicle, hash, mods, plate, garage, state, Balancepaid, balanceleft, vehiclePrice , receipt, ownername, phonenumber, soldby, solddate, commission) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                { pData.PlayerData.license, pData.PlayerData.citizenid, vehicle, GetHashKey(vehicle), '{}', plate,
+                    "tunerparking", 0, price, "0", price, receipt, pData.PlayerData.charinfo.firstname,
+                    pData.PlayerData.phone, "TUNERS", date, "1" })
+            TriggerClientEvent('QBCore:Notify', playerid, 'Congratulations on purchase of ' .. name .. '!', 'success')
+            TriggerClientEvent('QBCore:Notify', src, 'You sold a vehicle to [' .. playerid .. ']!', 'success')
             TriggerClientEvent('cad-tuners:TakeOutBuy', playerid, model, plate, data.coords)
             pData.Functions.RemoveMoney('bank', price, 'vehicle-bought-tuners')
             exports['qb-management']:AddMoney("tuner", price)
@@ -57,6 +62,7 @@ QBCore.Functions.CreateCallback('cad-tuners:spawnVehicle', function(source, cb, 
     while NetworkGetEntityOwner(veh) ~= source do Wait(0) end
     cb(NetworkGetNetworkIdFromEntity(veh))
     SetTimeout(500, function()
-        TriggerEvent("x99-vehstance:server:sync", GetVehicleNumberPlateText(veh), NetworkGetNetworkIdFromEntity(veh), source)
+        TriggerEvent("x99-vehstance:server:sync", GetVehicleNumberPlateText(veh), NetworkGetNetworkIdFromEntity(veh),
+            source)
     end)
 end)
